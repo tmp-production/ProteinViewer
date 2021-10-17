@@ -36,6 +36,8 @@
 #define FIXED_LENGTH_ROWS
 #define COMMENT_TERMINATED
 
+#define WIN32_LEAN_AND_MEAN  //Added because of error C4668
+
 #include "readcif.h"
 #include <limits.h>
 #ifdef CASE_INSENSITIVE
@@ -313,7 +315,7 @@ CIFFile::parse_file(const char* filename)
 
 	bool used_mmap = false;
 	char* buffer = NULL;
-	HANDLE mapping;
+	HANDLE mapping = NULL;
 
 	if (size.QuadPart % sys_info.dwPageSize != 0) {
 		mapping = CreateFileMapping(file, NULL, PAGE_READONLY, 0, 0, NULL);
@@ -445,7 +447,7 @@ CIFFile::parse(const char* buffer)
 		internal_parse();
 		parsing = false;
 		finished_parse();
-	} catch (std::exception &e) {
+	} catch (std::exception) {
 		parsing = false;
 		throw;
 	}
@@ -1221,7 +1223,7 @@ CIFFile::parse_row(ParseValues& pv)
 		return false;
 	if (first_row) {
 		first_row = false;
-		bool fixed = use_fixed_width_columns.count(current_category);
+		bool fixed = (bool) use_fixed_width_columns.count(current_category);
 		columns.clear();
 		std::sort(pv.begin(), pv.end(),
 			[](const ParseColumn& a, const ParseColumn& b) -> bool {
@@ -1519,7 +1521,7 @@ CIFFile::parse_audit_conform()
 			[&dict_version] (const char* start) {
 				dict_version = strtof(start, NULL);
 			});
-	} catch (std::runtime_error& e) {
+	} catch (std::runtime_error) {
 		return;
 	}
 	parse_row(pv);
@@ -1557,7 +1559,7 @@ CIFFile::parse_audit_syntax()
 					fixed_width.push_back(string(start, cp - start));
 				}
 			});
-	} catch (std::runtime_error& e) {
+	} catch (std::runtime_error) {
 		return;
 	}
 	parse_row(pv);

@@ -24,11 +24,14 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 	                           const FString& FileTypes, TArray<FString>& OutFileNames);
 
 	/**
-	 * Reads the specified file and tries to parse it into an FTransform object.
+	 * Reads the specified PDBx/mmCIF file and tries to parse it
 	 *
 	 * @param Filename The filename of the file to open
-	 * @return The resulting FTransform object
+	 * @param Scale The scale factor applied to the coordinates of each atom
+	 * @param AtomTransforms The Transform array representing the positions of the atoms
 	 */
 	UFUNCTION(BlueprintCallable, Category = "FilePicker")
-	static FTransform ParseInputFile(const FString Filename);
+	static void ParseInputFile(
+		const FString& Filename, const float Scale,
+		TArray<FTransform>& AtomTransforms);
 };

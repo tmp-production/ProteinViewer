@@ -2,6 +2,9 @@
 
 #include "MyBlueprintFunctionLibrary.h"
 #include "DesktopPlatform/Public/DesktopPlatformModule.h"
+#include "readcif.h"
+
+using namespace readcif;
 
 void UMyBlueprintFunctionLibrary::OpenFileDialog(
 	const FString& DialogTitle, const FString& DefaultPath,
@@ -23,14 +26,43 @@ void UMyBlueprintFunctionLibrary::OpenFileDialog(
 	}
 }
 
-FTransform UMyBlueprintFunctionLibrary::ParseInputFile(const FString Filename)
+void UMyBlueprintFunctionLibrary::ParseInputFile(
+	const FString& Filename, const float Scale,
+	TArray<FTransform>& AtomTransforms)
 {
-	TArray<FString> InputStrings;
-	FFileHelper::LoadFileToStringArray(InputStrings, GetData(Filename));
+	CIFFile FileParser;
+	FileParser.register_heuristic_stylized_detection();
+	FileParser.register_category("atom_site", [&FileParser, &AtomTransforms, Scale]()
+	{
+		CIFFile::ParseValues ParseValues;
+		FVector AtomVector;
 
-	const float x = FCString::Atof(*InputStrings[0]);
-	const float y = FCString::Atof(*InputStrings[1]);
-	const float z = FCString::Atof(*InputStrings[2]);
+		ParseValues.emplace_back(
+			FileParser.get_column("Cartn_x", true),
+			[&AtomVector, Scale](const char* Start)
+			{
+				AtomVector.X = Scale * str_to_float(Start);
+			});
 
-	return FTransform(FVector(x, y, z));
+		ParseValues.emplace_back(
+			FileParser.get_column("Cartn_y", true),
+			[&AtomVector, Scale](const char* Start)
+			{
+				AtomVector.Y = Scale * str_to_float(Start);
+			});
+
+		ParseValues.emplace_back(
+			FileParser.get_column("Cartn_z", true),
+			[&AtomVector, Scale](const char* Start)
+			{
+				AtomVector.Z = Scale * str_to_float(Start);
+			});
+
+		while (FileParser.parse_row(ParseValues))
+		{
+			AtomTransforms.Add(FTransform(AtomVector));
+		}
+	});
+
+	FileParser.parse_file(TCHAR_TO_ANSI(*Filename));
 }

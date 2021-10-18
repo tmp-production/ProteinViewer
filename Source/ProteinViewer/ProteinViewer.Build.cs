@@ -7,11 +7,13 @@ public class ProteinViewer : ModuleRules
 	public ProteinViewer(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
+		
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+		
+		bEnableExceptions = true;  // could fix Error C4530
 		
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");

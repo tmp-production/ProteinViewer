@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AtomStruct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
@@ -28,10 +29,10 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 	 *
 	 * @param Filename The filename of the file to open
 	 * @param Scale The scale factor applied to the coordinates of each atom
-	 * @param AtomTransforms The Transform array representing the positions of the atoms
+	 * @param AtomStructs The FAtomStruct array representing the structures of the atoms
 	 */
 	UFUNCTION(BlueprintCallable, Category = "FilePicker")
 	static void ParseInputFile(
 		const FString& Filename, const float Scale,
-		TArray<FTransform>& AtomTransforms);
+		TArray<FAtomStruct>& AtomStructs);
 };

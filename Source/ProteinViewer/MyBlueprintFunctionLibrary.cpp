@@ -28,39 +28,53 @@ void UMyBlueprintFunctionLibrary::OpenFileDialog(
 
 void UMyBlueprintFunctionLibrary::ParseInputFile(
 	const FString& Filename, const float Scale,
-	TArray<FTransform>& AtomTransforms)
+	TArray<FAtomStruct>& AtomStructs)
 {
 	CIFFile FileParser;
 	FileParser.register_heuristic_stylized_detection();
-	FileParser.register_category("atom_site", [&FileParser, &AtomTransforms, Scale]()
+	FileParser.register_category("atom_site", [&FileParser, &AtomStructs, Scale]()
 	{
 		CIFFile::ParseValues ParseValues;
-		FVector AtomVector;
+		FAtomStruct Atom;
 
 		ParseValues.emplace_back(
-			FileParser.get_column("Cartn_x", true),
-			[&AtomVector, Scale](const char* Start)
+			FileParser.get_column("type_symbol", true),
+			[&Atom](const char* Start)
 			{
-				AtomVector.X = Scale * str_to_float(Start);
+				if(Start[1] == ' ') // If Element type is 1 char. For example: C, O, N
+				{
+					Atom.Element = FString(1, Start);
+				}
+				else // If Element type is 2 chars. For example: FE
+				{
+					Atom.Element = FString(2, Start);
+				}
+			});
+		
+		ParseValues.emplace_back(
+			FileParser.get_column("Cartn_x", true),
+			[&Atom, Scale](const char* Start)
+			{
+				Atom.coordinates.X = Scale * str_to_float(Start);
 			});
 
 		ParseValues.emplace_back(
 			FileParser.get_column("Cartn_y", true),
-			[&AtomVector, Scale](const char* Start)
+			[&Atom, Scale](const char* Start)
 			{
-				AtomVector.Y = Scale * str_to_float(Start);
+				Atom.coordinates.Y = Scale * str_to_float(Start);
 			});
 
 		ParseValues.emplace_back(
 			FileParser.get_column("Cartn_z", true),
-			[&AtomVector, Scale](const char* Start)
+			[&Atom, Scale](const char* Start)
 			{
-				AtomVector.Z = Scale * str_to_float(Start);
+				Atom.coordinates.Z = Scale * str_to_float(Start);
 			});
 
 		while (FileParser.parse_row(ParseValues))
 		{
-			AtomTransforms.Add(FTransform(AtomVector));
+			AtomStructs.Add(Atom);
 		}
 	});
 

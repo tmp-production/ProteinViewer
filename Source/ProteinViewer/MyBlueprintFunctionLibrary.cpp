@@ -27,12 +27,12 @@ void UMyBlueprintFunctionLibrary::OpenFileDialog(
 }
 
 void UMyBlueprintFunctionLibrary::ParseInputFile(
-	const FString& Filename, const float Scale,
+	const FString& Filename,
 	TArray<FAtomStruct>& AtomStructs)
 {
 	CIFFile FileParser;
 	FileParser.register_heuristic_stylized_detection();
-	FileParser.register_category("atom_site", [&FileParser, &AtomStructs, Scale]()
+	FileParser.register_category("atom_site", [&FileParser, &AtomStructs]()
 	{
 		CIFFile::ParseValues ParseValues;
 		FAtomStruct Atom;
@@ -53,23 +53,23 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 		
 		ParseValues.emplace_back(
 			FileParser.get_column("Cartn_x", true),
-			[&Atom, Scale](const char* Start)
+			[&Atom](const char* Start)
 			{
-				Atom.coordinates.X = Scale * str_to_float(Start);
+				Atom.coordinates.X = str_to_float(Start);
 			});
 
 		ParseValues.emplace_back(
 			FileParser.get_column("Cartn_y", true),
-			[&Atom, Scale](const char* Start)
+			[&Atom](const char* Start)
 			{
-				Atom.coordinates.Y = Scale * str_to_float(Start);
+				Atom.coordinates.Y = str_to_float(Start);
 			});
 
 		ParseValues.emplace_back(
 			FileParser.get_column("Cartn_z", true),
-			[&Atom, Scale](const char* Start)
+			[&Atom](const char* Start)
 			{
-				Atom.coordinates.Z = Scale * str_to_float(Start);
+				Atom.coordinates.Z = str_to_float(Start);
 			});
 
 		while (FileParser.parse_row(ParseValues))

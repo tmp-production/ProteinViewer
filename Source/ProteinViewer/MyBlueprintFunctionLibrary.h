@@ -28,11 +28,10 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 	 * Reads the specified PDBx/mmCIF file and tries to parse it
 	 *
 	 * @param Filename The filename of the file to open
-	 * @param Scale The scale factor applied to the coordinates of each atom
 	 * @param AtomStructs The FAtomStruct array representing the structures of the atoms
 	 */
 	UFUNCTION(BlueprintCallable, Category = "FilePicker")
 	static void ParseInputFile(
-		const FString& Filename, const float Scale,
+		const FString& Filename,
 		TArray<FAtomStruct>& AtomStructs);
 };

@@ -3,6 +3,7 @@
 #include "MyBlueprintFunctionLibrary.h"
 #include "DesktopPlatform/Public/DesktopPlatformModule.h"
 #include "readcif.h"
+#include "Kismet/KismetStringLibrary.h"
 
 using namespace readcif;
 
@@ -79,4 +80,63 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 	});
 
 	FileParser.parse_file(TCHAR_TO_ANSI(*Filename));
+}
+
+void UMyBlueprintFunctionLibrary::ParseTriangles(
+		TArray<FVector>& Vertices,
+		TArray<int32>& Indexes)
+{
+	FString file = FPaths::ProjectDir();
+	file.Append(TEXT("triangles.txt"));
+	IPlatformFile& FileManager = FPlatformFileManager::Get().GetPlatformFile();
+
+	TArray<FString> FileContent;
+	// Always first check if the file that you want to manipulate exist.
+	if (FileManager.FileExists(*file))
+	{
+		// We use the LoadFileToString to load the file into
+		if(FFileHelper::LoadFileToStringArray(FileContent,*file))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Text From File %s Readed"), *file);
+			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Number of lines readed: %d"), FileContent.Num());
+			int flag = 1;
+			for (FString line : FileContent)
+			{
+				if (flag == 1) {
+					flag = 2;
+					UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Line parse %s"), *line);
+				}
+				TArray<FString> verticeCoordinates = UKismetStringLibrary::ParseIntoArray(line, FString(" "));
+				if (flag == 2) {
+					flag = 3;
+					UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Count %d"), verticeCoordinates.Num());
+				}
+				if (verticeCoordinates.Num() == 3)
+				{
+					if (flag == 3) {
+						flag = 4;
+						UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Creating Vector %s %s %s"),
+							*verticeCoordinates[0], *verticeCoordinates[1], *verticeCoordinates[2]);
+					}
+					FVector vertex = FVector(
+						FCString::Atof(*(verticeCoordinates[0])),
+						FCString::Atof(*(verticeCoordinates[1])),
+						FCString::Atof(*(verticeCoordinates[2])));
+					Vertices.Add(vertex);
+				}
+			}
+			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: For ended %d"), Vertices.Num());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Did not load text from file"));
+		}
+		//FFileHelper::SaveStringToFile(FString(FString::FromInt(Vertices.Num())),*(FPaths::ProjectDir()+"example.txt"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FileManipulation: ERROR: Can not read the file because it was not found."));
+		UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Expected file location: %s"),*file);
+	}
+	
 }

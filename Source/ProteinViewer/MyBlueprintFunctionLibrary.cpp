@@ -99,6 +99,7 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 		{
 			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Text From File %s Readed"), *file);
 			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Number of lines readed: %d"), FileContent.Num());
+			int index = 0; 
 			int flag = 1;
 			for (FString line : FileContent)
 			{
@@ -123,15 +124,17 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 						FCString::Atof(*(verticeCoordinates[1])),
 						FCString::Atof(*(verticeCoordinates[2])));
 					Vertices.Add(vertex);
+					Indexes.Add(index);
+					index++;
 				}
 			}
-			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: For ended %d"), Vertices.Num());
+			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Vertices.Num: %d"), Vertices.Num());
+			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Indexes.Num: %d"), Indexes.Num());
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Did not load text from file"));
 		}
-		//FFileHelper::SaveStringToFile(FString(FString::FromInt(Vertices.Num())),*(FPaths::ProjectDir()+"example.txt"));
 	}
 	else
 	{

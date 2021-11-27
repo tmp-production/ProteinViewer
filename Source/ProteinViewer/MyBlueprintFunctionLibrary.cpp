@@ -3,7 +3,8 @@
 #include "MyBlueprintFunctionLibrary.h"
 #include "DesktopPlatform/Public/DesktopPlatformModule.h"
 #include "readcif.h"
-#include "Kismet/KismetStringLibrary.h"
+#include "pdb/PDBParser.h"
+#include "ribbon/Ribbon.h"
 
 using namespace readcif;
 
@@ -42,7 +43,7 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 			FileParser.get_column("type_symbol", true),
 			[&Atom](const char* Start)
 			{
-				if(Start[1] == ' ') // If Element type is 1 char. For example: C, O, N
+				if (Start[1] == ' ') // If Element type is 1 char. For example: C, O, N
 				{
 					Atom.Element = FString(1, Start);
 				}
@@ -51,7 +52,7 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 					Atom.Element = FString(2, Start);
 				}
 			});
-		
+
 		ParseValues.emplace_back(
 			FileParser.get_column("Cartn_x", true),
 			[&Atom](const char* Start)
@@ -83,63 +84,28 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 }
 
 void UMyBlueprintFunctionLibrary::ParseTriangles(
-		TArray<FVector>& Vertices,
-		TArray<int32>& Indexes)
+	TArray<FVector>& Vertices, TArray<int32>& Indexes
+)
 {
-	FString file = FPaths::ProjectDir();
-	file.Append(TEXT("triangles.txt"));
-	IPlatformFile& FileManager = FPlatformFileManager::Get().GetPlatformFile();
+	FString File = FPaths::ProjectDir();
+	File.Append(TEXT("4hhb.pdb"));
 
-	TArray<FString> FileContent;
-	// Always first check if the file that you want to manipulate exist.
-	if (FileManager.FileExists(*file))
+	const char* filename = TCHAR_TO_UTF8(*File);
+	const auto model = pdb::PDBParser::read(filename);
+
+	UE_LOG(LogTemp, Log, TEXT("Parsed a molecule with %d atoms"), model.atoms.size());
+
+	for (const auto& chain : model.chains)
 	{
-		// We use the LoadFileToString to load the file into
-		if(FFileHelper::LoadFileToStringArray(FileContent,*file))
+		for (const auto& triangle : ribbon::createChainMesh(chain))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Text From File %s Readed"), *file);
-			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Number of lines readed: %d"), FileContent.Num());
-			int index = 0; 
-			int flag = 1;
-			for (FString line : FileContent)
+			for (const auto& vertex : triangle.vertices)
 			{
-				if (flag == 1) {
-					flag = 2;
-					UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Line parse %s"), *line);
-				}
-				TArray<FString> verticeCoordinates = UKismetStringLibrary::ParseIntoArray(line, FString(" "));
-				if (flag == 2) {
-					flag = 3;
-					UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Count %d"), verticeCoordinates.Num());
-				}
-				if (verticeCoordinates.Num() == 3)
-				{
-					if (flag == 3) {
-						flag = 4;
-						UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Creating Vector %s %s %s"),
-							*verticeCoordinates[0], *verticeCoordinates[1], *verticeCoordinates[2]);
-					}
-					FVector vertex = FVector(
-						FCString::Atof(*(verticeCoordinates[0])),
-						FCString::Atof(*(verticeCoordinates[1])),
-						FCString::Atof(*(verticeCoordinates[2])));
-					Vertices.Add(vertex);
-					Indexes.Add(index);
-					index++;
-				}
+				Vertices.Add(vertex.position);
+				Indexes.Add(Indexes.Num());
 			}
-			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Vertices.Num: %d"), Vertices.Num());
-			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Indexes.Num: %d"), Indexes.Num());
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Did not load text from file"));
 		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("FileManipulation: ERROR: Can not read the file because it was not found."));
-		UE_LOG(LogTemp, Warning, TEXT("FileManipulation: Expected file location: %s"),*file);
-	}
-	
+
+	UE_LOG(LogTemp, Log, TEXT("Generated %d triangles for the mesh"), Indexes.Num() / 3);
 }

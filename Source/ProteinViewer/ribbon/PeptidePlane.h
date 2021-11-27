@@ -3,7 +3,7 @@
 
 namespace ribbon
 {
-	typedef std::pair<pdb::ResidueType, pdb::ResidueType> ResiduePair;
+	typedef TPair<pdb::ResidueType, pdb::ResidueType> ResiduePair;
 
 	struct PeptidePlane
 	{

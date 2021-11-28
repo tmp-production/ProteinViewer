@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AtomStruct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Structs/MeshSectionStruct.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 UCLASS()
@@ -37,6 +38,5 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 
 	UFUNCTION(BlueprintCallable, Category = "FilePicker")
 	static void ParseTriangles(
-		TArray<FVector>& Vertices,
-		TArray<int32>& Indexes);
+		TArray<FMeshSectionStruct>& sections);
 };

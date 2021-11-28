@@ -84,7 +84,7 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 }
 
 void UMyBlueprintFunctionLibrary::ParseTriangles(
-	TArray<FVector>& Vertices, TArray<int32>& Indexes
+	TArray<FMeshSectionStruct>& sections
 )
 {
 	FString File = FPaths::ProjectDir();
@@ -97,6 +97,9 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 
 	for (const auto& chain : model.chains)
 	{
+		UE_LOG(LogTemp, Log, TEXT("Chain"));
+		TArray<FVector> Vertices;
+		TArray<int32> Indexes;
 		for (const auto& triangle : ribbon::createChainMesh(chain))
 		{
 			for (const auto& vertex : triangle.vertices)
@@ -105,7 +108,9 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 				Indexes.Add(Indexes.Num());
 			}
 		}
+		UE_LOG(LogTemp, Log, TEXT("Chain vertex count: %d"), Vertices.Num());
+		sections.Add(FMeshSectionStruct(Vertices, Indexes));
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Generated %d triangles for the mesh"), Indexes.Num() / 3);
+	// UE_LOG(LogTemp, Log, TEXT("Generated %d triangles for the mesh"), Indexes.Num() / 3);
 }

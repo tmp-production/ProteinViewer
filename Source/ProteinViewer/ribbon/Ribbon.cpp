@@ -1,6 +1,8 @@
 #include "Ribbon.h"
 #include "Spline.h"
-
+#include <functional>
+#define _USE_MATH_DEFINES
+#include <math.h>
 using namespace ribbon;
 
 TArray<FVector> ribbon::ellipseProfile(const int n, const double width, const double height)

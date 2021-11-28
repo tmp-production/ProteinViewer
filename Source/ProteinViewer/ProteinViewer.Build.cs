@@ -15,9 +15,12 @@ public class ProteinViewer : ModuleRules
 		
 		bEnableExceptions = true;  // could fix Error C4530
 		
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		CppStandard = CppStandardVersion.Latest;  // Error C7555 fix
+		
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
-
+		
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
 	}
 }

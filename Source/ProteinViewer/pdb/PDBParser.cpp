@@ -38,7 +38,7 @@ std::vector <Connection> PDBParser::parseConnections(const std::string &line) {
             connections.push_back(Connection{
                     .serial1 = a, .serial2 = b
             });
-        } catch (const std::invalid_argument &e) {
+        } catch (const std::invalid_argument) {
             // There may be less than 4 connections
             break;
         }

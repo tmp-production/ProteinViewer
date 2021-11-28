@@ -12,7 +12,7 @@ namespace pdb {
     };
 }
 
-#define identity() ((Matrix) { \
+#define identity() (Matrix { \
     .value = {                 \
         {1, 0, 0, 0},          \
         {0, 1, 0, 0},          \

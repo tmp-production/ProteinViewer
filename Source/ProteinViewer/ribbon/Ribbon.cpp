@@ -477,3 +477,56 @@ TArray<Triangle> ribbon::createChainMesh(const pdb::Chain& chain)
 
 	return triangles;
 }
+
+TArray<TArray<Triangle>> ribbon::createSecondaryStructureMesh(const pdb::Chain& chain)
+{
+	TArray<TArray<Triangle>> structures;
+	TArray<PeptidePlane> planes;
+
+	for (int i = 0; i < chain.residues.size() - 2; i++)
+	{
+		const auto r1 = chain.residues[i];
+		const auto r2 = chain.residues[i + 1];
+		const auto r3 = chain.residues[i + 2];
+
+		planes.Emplace(r1, r2, r3);
+	}
+
+	FVector previous;
+	for (int i = 0; i < planes.Num(); i++)
+	{
+		PeptidePlane p = planes[i];
+		if (i > 0 && (p.side | previous) < 0)
+		{
+			p.flip();
+		}
+		previous = p.side;
+	}
+
+	const int n = planes.Num() - 3;
+	auto previousResidueType = planes[0].residue1->type;
+	UE_LOG(LogTemp, Log, TEXT("First structure type: %d"), previousResidueType);
+	int lastIdx = 0;
+	TArray<Triangle> triangles;
+	structures.Add(triangles);
+	for (int i = 0; i < n; i++)
+	{
+		const auto pp1 = planes[i];
+		const auto pp2 = planes[i + 1];
+		const auto pp3 = planes[i + 2];
+		const auto pp4 = planes[i + 3];
+
+		if (pp1.residue1->type != previousResidueType)
+		{
+			//UE_LOG(LogTemp, Log, TEXT("Structure changed"));
+			TArray<Triangle> newTriangles;
+			structures.Add(newTriangles);
+			lastIdx = structures.Num();
+		}
+		
+		structures[lastIdx].Append(createSegmentMesh(i, n, pp1, pp2, pp3, pp4));
+		previousResidueType = pp1.residue1->type;
+	}
+
+	return structures;
+}

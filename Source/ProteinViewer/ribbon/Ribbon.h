@@ -36,4 +36,6 @@ namespace ribbon
 	);
 
 	TArray<Triangle> createChainMesh(const pdb::Chain& chain);
+	
+	TArray<TArray<Triangle>> createSecondaryStructureMesh(const pdb::Chain& chain);
 }

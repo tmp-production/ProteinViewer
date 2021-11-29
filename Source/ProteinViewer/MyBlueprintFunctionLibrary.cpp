@@ -108,6 +108,12 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 				Indexes.Add(Indexes.Num());
 			}
 		}
+
+		for (const auto& StructureMesh : ribbon::createSecondaryStructureMesh(chain))
+		{
+			UE_LOG(LogTemp, Log, TEXT("Structure triangle count: %d"), StructureMesh.Num());
+		}
+		
 		UE_LOG(LogTemp, Log, TEXT("Chain vertex count: %d"), Vertices.Num());
 		sections.Add(FMeshSectionStruct(Vertices, Indexes));
 	}

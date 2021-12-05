@@ -97,26 +97,23 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 
 	for (const auto& chain : model.chains)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Chain"));
-		TArray<FVector> Vertices;
-		TArray<int32> Indexes;
-		for (const auto& triangle : ribbon::createChainMesh(chain))
+		UE_LOG(LogTemp, Log, TEXT("Chain construction"));
+		for (const auto& Structure : ribbon::createSecondaryStructureMesh(chain))
 		{
-			for (const auto& vertex : triangle.vertices)
+			for (const auto segment : Structure)
 			{
-				Vertices.Add(vertex.position);
-				Indexes.Add(Indexes.Num());
+				TArray<FVector> Vertices;
+				TArray<int32> Indexes;
+				for (const auto& triangle : segment)
+				{
+					for (const auto& vertex : triangle.vertices)
+					{
+						Vertices.Add(vertex.position);
+						Indexes.Add(Indexes.Num());
+					}
+				}
+				sections.Add(FMeshSectionStruct(Vertices, Indexes));
 			}
 		}
-
-		for (const auto& StructureMesh : ribbon::createSecondaryStructureMesh(chain))
-		{
-			UE_LOG(LogTemp, Log, TEXT("Structure triangle count: %d"), StructureMesh.Num());
-		}
-		
-		UE_LOG(LogTemp, Log, TEXT("Chain vertex count: %d"), Vertices.Num());
-		sections.Add(FMeshSectionStruct(Vertices, Indexes));
 	}
-
-	// UE_LOG(LogTemp, Log, TEXT("Generated %d triangles for the mesh"), Indexes.Num() / 3);
 }

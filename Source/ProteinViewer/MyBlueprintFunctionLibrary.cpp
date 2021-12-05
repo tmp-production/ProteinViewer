@@ -84,7 +84,7 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 }
 
 void UMyBlueprintFunctionLibrary::ParseTriangles(
-	TArray<FResidue>& sections
+	TArray<FChain>& chains
 )
 {
 	FString File = FPaths::ProjectDir();
@@ -98,7 +98,9 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 	for (const auto& chain : model.chains)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Chain construction"));
-		// TODO bigger model structures
-		ribbon::createResidueMeshes(chain, sections);
+		FChain fchain = FChain(chain.chainID.c_str());
+		ribbon::createResidueMeshes(chain, fchain.residues);
+		UE_LOG(LogTemp, Log, TEXT("Chain constructed, %d residues"), fchain.residues.Num());
+		chains.Add(fchain);
 	}
 }

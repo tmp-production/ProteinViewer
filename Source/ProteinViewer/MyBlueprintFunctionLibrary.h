@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AtomStruct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Structs/FChain.h"
 #include "Structs/FResidue.h"
 #include "Structs/MeshSectionStruct.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
@@ -39,5 +40,5 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 
 	UFUNCTION(BlueprintCallable, Category = "FilePicker")
 	static void ParseTriangles(
-		TArray<FResidue>& sections);
+		TArray<FChain>& chains);
 };

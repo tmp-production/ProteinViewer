@@ -84,7 +84,7 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 }
 
 void UMyBlueprintFunctionLibrary::ParseTriangles(
-	TArray<FMeshSectionStruct>& sections
+	TArray<FResidue>& sections
 )
 {
 	FString File = FPaths::ProjectDir();
@@ -98,22 +98,7 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 	for (const auto& chain : model.chains)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Chain construction"));
-		for (const auto& Structure : ribbon::createSecondaryStructureMesh(chain))
-		{
-			for (const auto segment : Structure)
-			{
-				TArray<FVector> Vertices;
-				TArray<int32> Indexes;
-				for (const auto& triangle : segment)
-				{
-					for (const auto& vertex : triangle.vertices)
-					{
-						Vertices.Add(vertex.position);
-						Indexes.Add(Indexes.Num());
-					}
-				}
-				sections.Add(FMeshSectionStruct(Vertices, Indexes));
-			}
-		}
+		// TODO bigger model structures
+		ribbon::createResidueMeshes(chain, sections);
 	}
 }

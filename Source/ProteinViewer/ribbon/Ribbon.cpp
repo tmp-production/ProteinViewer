@@ -439,16 +439,16 @@ TArray<Triangle> ribbon::createSegmentMesh(
 	return triangles;
 }
 
-TArray<Triangle> ribbon::createChainMesh(const pdb::Chain& chain)
+TArray<FResidue> ribbon::createResidueMeshes(const pdb::Chain& chain)
 {
-	TArray<Triangle> triangles;
+	TArray<FResidue> sections;
 	TArray<PeptidePlane> planes;
 
 	for (int i = 0; i < chain.residues.size() - 2; i++)
 	{
-		const auto r1 = chain.residues[i];
-		const auto r2 = chain.residues[i + 1];
-		const auto r3 = chain.residues[i + 2];
+		const auto& r1 = chain.residues[i];
+		const auto& r2 = chain.residues[i + 1];
+		const auto& r3 = chain.residues[i + 2];
 
 		planes.Emplace(r1, r2, r3);
 	}
@@ -467,56 +467,16 @@ TArray<Triangle> ribbon::createChainMesh(const pdb::Chain& chain)
 	const int n = planes.Num() - 3;
 	for (int i = 0; i < n; i++)
 	{
-		const auto pp1 = planes[i];
-		const auto pp2 = planes[i + 1];
-		const auto pp3 = planes[i + 2];
-		const auto pp4 = planes[i + 3];
-		
-		triangles.Append(createSegmentMesh(i, n, pp1, pp2, pp3, pp4));
-	}
+		const auto& pp1 = planes[i];
+		const auto& pp2 = planes[i + 1];
+		const auto& pp3 = planes[i + 2];
+		const auto& pp4 = planes[i + 3];
 
-	return triangles;
-}
+		const auto mesh = createSegmentMesh(i, n, pp1, pp2, pp3, pp4);
 
-void ribbon::createResidueMeshes(
-	const pdb::Chain& chain,
-	TArray<FResidue>& sections
-	)
-{
-	TArray<PeptidePlane> planes;
-
-	for (int i = 0; i < chain.residues.size() - 2; i++)
-	{
-		const auto r1 = chain.residues[i];
-		const auto r2 = chain.residues[i + 1];
-		const auto r3 = chain.residues[i + 2];
-
-		planes.Emplace(r1, r2, r3);
-	}
-
-	FVector previous;
-	for (int i = 0; i < planes.Num(); i++)
-	{
-		PeptidePlane p = planes[i];
-		if (i > 0 && (p.side | previous) < 0)
-		{
-			p.flip();
-		}
-		previous = p.side;
-	}
-
-	const int n = planes.Num() - 3;
-
-	for (int i = 0; i < n; i++)
-	{
-		const auto pp1 = planes[i];
-		const auto pp2 = planes[i + 1];
-		const auto pp3 = planes[i + 2];
-		const auto pp4 = planes[i + 3];
-
-		TArray<Triangle> mesh = createSegmentMesh(i, n, pp1, pp2, pp3, pp4);
 		TArray<FVector> Vertices;
 		TArray<int32> Indexes;
+
 		for (const auto& triangle : mesh)
 		{
 			for (const auto& vertex : triangle.vertices)
@@ -525,6 +485,11 @@ void ribbon::createResidueMeshes(
 				Indexes.Add(Indexes.Num());
 			}
 		}
-		sections.Add(FResidue(FMeshSectionStruct(Vertices, Indexes), EResidueType(pp1.residue1->type)));
+
+		const auto meshSection = FMeshSectionStruct(Vertices, Indexes);
+		const auto residueType = static_cast<EResidueType>(planes[i].residue1->type);
+		sections.Emplace(meshSection, residueType);
 	}
+
+	return sections;
 }

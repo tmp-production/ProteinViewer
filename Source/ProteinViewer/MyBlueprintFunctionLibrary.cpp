@@ -98,9 +98,12 @@ void UMyBlueprintFunctionLibrary::ParseTriangles(
 	for (const auto& chain : model.chains)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Chain construction"));
+
 		FChain fchain = FChain(chain.chainID.c_str());
-		ribbon::createResidueMeshes(chain, fchain.residues);
+		fchain.residues = ribbon::createResidueMeshes(chain);
+
 		UE_LOG(LogTemp, Log, TEXT("Chain constructed, %d residues"), fchain.residues.Num());
+
 		chains.Add(fchain);
 	}
 }

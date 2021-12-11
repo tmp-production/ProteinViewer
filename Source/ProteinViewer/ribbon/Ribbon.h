@@ -36,7 +36,5 @@ namespace ribbon
 		const PeptidePlane& pp3, const PeptidePlane& pp4
 	);
 
-	TArray<Triangle> createChainMesh(const pdb::Chain& chain);
-	
-	void createResidueMeshes(const pdb::Chain& chain, TArray<FResidue>& sections);
+	TArray<FResidue> createResidueMeshes(const pdb::Chain& chain);
 }

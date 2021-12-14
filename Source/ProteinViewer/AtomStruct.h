@@ -15,4 +15,10 @@ public:
 		Element = FString();
 		coordinates = FVector();
 	}
+
+	FAtomStruct(FString elem, FVector coords)
+	{
+		Element = elem;
+		coordinates = coords;
+	}
 };

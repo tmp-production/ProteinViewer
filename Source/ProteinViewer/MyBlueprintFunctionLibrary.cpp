@@ -83,17 +83,23 @@ void UMyBlueprintFunctionLibrary::ParseInputFile(
 	FileParser.parse_file(TCHAR_TO_ANSI(*Filename));
 }
 
-void UMyBlueprintFunctionLibrary::ParseTriangles(
-	TArray<FChain>& chains
+void UMyBlueprintFunctionLibrary::LoadPDBModel(
+	TArray<FChain>& chains,
+	TArray<FAtomStruct>& AtomStructs,
+	const FString& File
 )
 {
-	FString File = FPaths::ProjectDir();
-	File.Append(TEXT("4hhb.pdb"));
+	UE_LOG(LogTemp, Log, TEXT("Loading file: %s"), *File);
 
 	const char* filename = TCHAR_TO_UTF8(*File);
 	const auto model = pdb::PDBParser::read(filename);
 
 	UE_LOG(LogTemp, Log, TEXT("Parsed a molecule with %d atoms"), model.atoms.size());
+	for (pdb::Atom atom : model.atoms)
+	{
+		AtomStructs.Add(FAtomStruct(FString(atom.element.c_str()),
+		FVector(atom.x, atom.y, atom.z)));
+	}
 
 	for (const auto& chain : model.chains)
 	{

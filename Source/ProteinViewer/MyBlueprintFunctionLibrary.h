@@ -39,6 +39,8 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 		TArray<FAtomStruct>& AtomStructs);
 
 	UFUNCTION(BlueprintCallable, Category = "FilePicker")
-	static void ParseTriangles(
-		TArray<FChain>& chains);
+	static void LoadPDBModel(
+		TArray<FChain>& chains,
+		TArray<FAtomStruct>& AtomStructs,
+        const FString& File);
 };

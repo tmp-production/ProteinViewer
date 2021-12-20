@@ -487,7 +487,7 @@ TArray<FResidue> ribbon::createResidueMeshes(const pdb::Chain& chain)
 		}
 
 		const auto meshSection = FMeshSectionStruct(Vertices, Indexes);
-		const auto residueType = static_cast<EResidueType>(planes[i].residue1->type);
+		const auto residueType = static_cast<EResidueType>(planes[i+2].residue1->type);
 		sections.Emplace(meshSection, residueType);
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Element.h"
-#include "ProteinViewer/pdb/model/Atom.h"
+#include "ProteinViewer/parsers/pdb/model/Atom.h"
 
 inline FVector atomPosition(const pdb::Atom& atom)
 {

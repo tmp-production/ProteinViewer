@@ -1,5 +1,5 @@
 #pragma once
-#include "ProteinViewer/pdb/model/Residue.h"
+#include "ProteinViewer/parsers/pdb/model/Residue.h"
 
 namespace ribbon
 {

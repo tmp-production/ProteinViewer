@@ -2,8 +2,8 @@
 
 #include "MyBlueprintFunctionLibrary.h"
 #include "DesktopPlatform/Public/DesktopPlatformModule.h"
-#include "readcif.h"
-#include "pdb/PDBParser.h"
+#include "parsers/mmCIF/readcif.h"
+#include "parsers/pdb/PDBParser.h"
 #include "ribbon/Ribbon.h"
 
 using namespace readcif;

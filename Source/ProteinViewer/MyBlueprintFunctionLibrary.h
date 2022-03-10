@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AtomStruct.h"
+#include "Structs/AtomStruct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Structs/FChain.h"
 #include "Structs/FResidue.h"

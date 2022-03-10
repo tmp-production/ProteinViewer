@@ -17,18 +17,20 @@ The main application that uses parser modules to read files, generate 3D modules
 
 ## Parser of PDB
 
-Parses PDB files into internal atom structure.
+`Source/ProteinViewer/parsers/pdb`<br>
+Parses PDB files into internal atom structure. 
 
 Reference Go implementation:
 https://github.com/fogleman/ribbon/tree/master/pdb
 
 ## Parser of mmCIF files
 
-Parses mmCIF files into internal atom structure.
-
+`Source/ProteinViewer/parsers/mmCIF`<br>
+Parses mmCIF files into internal atom structure. <br>
 https://github.com/RBVI/readcif
 
 ## 3D polygonal ribbon diagram generator
 
+`Source/ProteinViewer/ribbon`<br>
 Reference Go implementation:
 https://github.com/fogleman/ribbon/tree/master/ribbon

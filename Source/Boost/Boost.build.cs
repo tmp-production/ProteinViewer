@@ -6,5 +6,6 @@ public class Boost : ModuleRules
 {
 	public Boost(ReadOnlyTargetRules Target) : base(Target)
 	{
+		bUseRTTI = true;
 	}
 }

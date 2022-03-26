@@ -23,6 +23,10 @@
 #ifndef VINA_COMMON_H
 #define VINA_COMMON_H
 
+// Ignore the compiler warnings
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wreorder-ctor"
+
 #include <cassert>
 #include <string>
 #include <limits>

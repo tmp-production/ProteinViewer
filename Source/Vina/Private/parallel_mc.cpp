@@ -20,8 +20,8 @@
 
 */
 
-#include "parallel.h"
 #include "parallel_mc.h"
+#include "parallel.h"
 #include "coords.h"
 #include "parallel_progress.h"
 

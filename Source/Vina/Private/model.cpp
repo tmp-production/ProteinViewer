@@ -20,12 +20,12 @@
 
 */
 
-#include <random>
-
 #include "model.h"
 #include "file.h"
 #include "curl.h"
 #include "precalculate.h"
+
+#include <random>
 
 template<typename T>
 atom_range get_atom_range(const T& t) {

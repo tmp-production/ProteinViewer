@@ -20,6 +20,14 @@
 
 */
 
+#include "parse_pdbqt.h"
+#include "model.h"
+#include "atom_constants.h"
+#include "file.h"
+#include "convert_substring.h"
+#include "utils.h"
+#include "parse_error.h"
+
 #include <string>
 #include <fstream> // for getline ?
 #include <sstream> // in parse_two_unsigneds
@@ -31,13 +39,6 @@
 #include <boost/lexical_cast.hpp>
 //#include <openbabel/mol.h>
 //#include <openbabel/obconversion.h>
-#include "model.h"
-#include "atom_constants.h"
-#include "file.h"
-#include "convert_substring.h"
-#include "utils.h"
-#include "parse_pdbqt.h"
-#include "parse_error.h"
 
 
 struct parsed_atom : public atom {

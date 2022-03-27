@@ -54,6 +54,7 @@
 #include "scoring_function.h"
 #include "precalculate.h"
 
+namespace IMPL {
 
 class Vina {
 public:
@@ -172,5 +173,7 @@ private:
 	std::vector<double> optimize(output_type& out, const int max_steps=0);
 	int generate_seed(const int seed=0);
 };
+
+}; // namespace IMPL
 
 #endif

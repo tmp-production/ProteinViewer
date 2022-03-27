@@ -24,6 +24,7 @@
 #include "scoring_function.h"
 #include "precalculate.h"
 
+using namespace IMPL;
 
 void Vina::cite() {
 	const std::string cite_message = "\

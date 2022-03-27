@@ -6,12 +6,8 @@ public class ProteinViewer : ModuleRules
 {
 	public ProteinViewer(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-		
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
-
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
-		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+		PublicDependencyModuleNames.AddRange(new[] {"Core", "CoreUObject", "Engine", "InputCore"});
+		PrivateDependencyModuleNames.AddRange(new[] {"Slate", "SlateCore", "Vina"});
 		
 		bEnableExceptions = true;  // could fix Error C4530
 		

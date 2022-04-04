@@ -24,9 +24,6 @@
 #include "model.h"
 #include "precalculate.h"
 
-
-namespace fs = boost::filesystem;
-
 std::string convert_XS_to_string(sz t) {
 	switch(t) {
 		case XS_TYPE_C_H     : return "C_H";
@@ -335,7 +332,7 @@ void cache::read(const std::string &map_prefix) {
 		type = convert_XS_to_string(t);
 		filename = map_prefix + "." + type + ".map";
 		path p(filename);
-		if (fs::exists(p)) {
+		if (file_exists(p)) {
 			read_vina_map(p, gds, m_grids[t]);
 			found_at_least_1_map = true;
 		}

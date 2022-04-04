@@ -22,9 +22,6 @@
 
 #include "ad4cache.h"
 
-
-namespace fs = boost::filesystem;
-
 std::string get_adtype_str(sz& t) {
 	switch(t) {
 		case AD_TYPE_C : return "C";
@@ -326,7 +323,7 @@ void ad4cache::read(const std::string& map_prefix) {
 		type = get_adtype_str(t);
 		filename = map_prefix + "." + type + ".map";
 		path p(filename);
-		if (fs::exists(p)) {
+		if (file_exists(p)) {
 			read_ad4_map(p, gds, m_grids[t]);
 
 		} // if file exists

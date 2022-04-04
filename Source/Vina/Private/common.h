@@ -190,6 +190,11 @@ typedef std::vector<pr> prv;
 typedef std::vector<sz> szv;
 typedef boost::filesystem::path path;
 
+inline bool file_exists(const path &p) {
+    std::ifstream infile(p.string());
+    return infile.good();
+}
+
 struct internal_error {
 	std::string file;
 	unsigned line;

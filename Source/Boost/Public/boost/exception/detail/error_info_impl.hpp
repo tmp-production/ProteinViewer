@@ -5,7 +5,8 @@
 
 #ifndef BOOST_EXCEPTION_CE6983AC753411DDA764247956D89593
 #define BOOST_EXCEPTION_CE6983AC753411DDA764247956D89593
-
+#pragma warning( push )
+#pragma warning( disable : 4668)
 #include <boost/config.hpp>
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 #include <boost/type_traits/is_nothrow_move_constructible.hpp>
@@ -104,4 +105,5 @@ boost
 #if defined(_MSC_VER) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
 #pragma warning(pop)
 #endif
+#pragma warning( pop )
 #endif

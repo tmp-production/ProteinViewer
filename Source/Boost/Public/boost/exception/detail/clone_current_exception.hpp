@@ -6,6 +6,8 @@
 #ifndef BOOST_EXCEPTION_81522C0EB56511DFAB613DB0DFD72085
 #define BOOST_EXCEPTION_81522C0EB56511DFAB613DB0DFD72085
 
+#pragma warning( push )
+#pragma warning( disable : 4668)
 #ifndef BOOST_EXCEPTION_ENABLE_WARNINGS
 #if __GNUC__*100+__GNUC_MINOR__>301
 #pragma GCC system_header
@@ -17,6 +19,7 @@
 #pragma warning(push,1)
 #endif
 #endif
+#pragma warning( pop )
 
 #ifdef BOOST_NO_EXCEPTIONS
 #    error This header requires exception handling to be enabled.

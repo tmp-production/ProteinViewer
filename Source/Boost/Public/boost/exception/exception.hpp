@@ -17,6 +17,8 @@ namespace boost { template <class T> class shared_ptr; }
 namespace boost { namespace exception_detail { using boost::shared_ptr; } }
 #endif
 
+#pragma warning( push )
+#pragma warning( disable : 4668)
 #if !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
 #if __GNUC__*100+__GNUC_MINOR__>301
 #pragma GCC system_header
@@ -29,6 +31,7 @@ namespace boost { namespace exception_detail { using boost::shared_ptr; } }
 #pragma warning(disable: 4265)
 #endif
 #endif
+#pragma warning( pop ) 
 
 namespace
 boost

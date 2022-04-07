@@ -6,11 +6,12 @@
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-
+#pragma warning( push )
+#pragma warning( disable : 4668)
 #include <boost/mp11.hpp>
 #include <boost/config.hpp> // BOOST_NO_EXCEPTIONS
 #include "exception.hpp"
-
+#pragma warning( pop )
 namespace boost {
 namespace safe_numerics {
 

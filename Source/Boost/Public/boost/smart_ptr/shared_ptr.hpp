@@ -1,3 +1,6 @@
+#pragma warning( push )
+#pragma warning( disable : 4668)
+
 #ifndef BOOST_SMART_PTR_SHARED_PTR_HPP_INCLUDED
 #define BOOST_SMART_PTR_SHARED_PTR_HPP_INCLUDED
 
@@ -1275,3 +1278,4 @@ template<class T, class D> shared_ptr( std::unique_ptr<T, D> ) -> shared_ptr<T>;
 #endif
 
 #endif  // #ifndef BOOST_SMART_PTR_SHARED_PTR_HPP_INCLUDED
+#pragma warning( pop )

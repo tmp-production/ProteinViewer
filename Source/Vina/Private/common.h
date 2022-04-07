@@ -26,7 +26,8 @@
 // Ignore the compiler warnings
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wreorder-ctor"
-
+#pragma warning( push )
+#pragma warning( disable : 4668)
 #include <cassert>
 #include <string>
 #include <limits>
@@ -368,5 +369,5 @@ template<typename T>
 bool has(const std::vector<T>& v, const T& element) {
 	return std::find(v.begin(), v.end(), element) != v.end();
 }
-
+#pragma warning( pop ) 
 #endif

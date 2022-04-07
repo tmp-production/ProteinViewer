@@ -3,12 +3,17 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <functional>
 
 #ifdef VINA_API
 #undef VINA_API
 #endif
 
+#ifdef _WIN32
+#define VINA_API __declspec(dllexport)
+#else
 #define VINA_API __attribute__((visibility("default")))
+#endif
 
 class VINA_API Vina {
 public:

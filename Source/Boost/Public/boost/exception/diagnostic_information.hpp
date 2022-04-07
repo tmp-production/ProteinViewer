@@ -5,7 +5,10 @@
 
 #ifndef BOOST_EXCEPTION_0552D49838DD11DD90146B8956D89593
 #define BOOST_EXCEPTION_0552D49838DD11DD90146B8956D89593
-
+#pragma warning( push )
+#pragma warning( disable : 4668)
+#pragma warning( push )
+#pragma warning( disable : 4456)
 #include <boost/config.hpp>
 #include <boost/exception/get_error_info.hpp>
 #include <boost/exception/info.hpp>
@@ -210,4 +213,6 @@ boost
 #if defined(_MSC_VER) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
 #pragma warning(pop)
 #endif
+#pragma warning( pop )
+#pragma warning( pop )
 #endif

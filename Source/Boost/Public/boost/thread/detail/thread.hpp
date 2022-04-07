@@ -1,3 +1,5 @@
+#if defined(BOOST_THREAD_WIN32)
+
 #ifndef BOOST_THREAD_THREAD_COMMON_HPP
 #define BOOST_THREAD_THREAD_COMMON_HPP
 // Distributed under the Boost Software License, Version 1.0. (See
@@ -864,4 +866,5 @@ namespace boost
 
 #include <boost/config/abi_suffix.hpp>
 
+#endif
 #endif

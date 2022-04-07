@@ -12,7 +12,8 @@
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
 
-
+#pragma warning( push )
+#pragma warning( disable : 4668)
 #if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 5) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
 #  if ! defined BOOST_NO_CXX11_U16STRING
 #    define BOOST_NO_CXX11_U16STRING
@@ -21,7 +22,7 @@
 #    define BOOST_NO_CXX11_U32STRING
 #  endif
 #endif
-
+#pragma warning( pop ) 
 
 #if !defined BOOST_RATIO_VERSION
 #define BOOST_RATIO_VERSION 1

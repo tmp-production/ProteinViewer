@@ -32,12 +32,15 @@ UWP development.
 #define BOOST_PLAT_WINDOWS_SDK_VERSION BOOST_VERSION_NUMBER_NOT_AVAILABLE
 
 #if BOOST_OS_WINDOWS
+#pragma warning( push )
+#pragma warning( disable : 4668)
 //  MinGW (32-bit), WinCE, and wineg++ don't have a ntverp.h header
 #if !defined(__MINGW32__) && !defined(_WIN32_WCE) && !defined(__WINE__)
 #   include <ntverp.h>
 #   undef BOOST_PLAT_WINDOWS_SDK_VERSION
 #   define BOOST_PLAT_WINDOWS_SDK_VERSION BOOST_VERSION_NUMBER(0, 0, VER_PRODUCTBUILD)
 #endif
+#pragma warning( pop ) 
 
 // 9200 is Windows SDK 8.0 from ntverp.h which introduced family support
 #if ((BOOST_PLAT_WINDOWS_SDK_VERSION >= BOOST_VERSION_NUMBER(0, 0, 9200)) || \

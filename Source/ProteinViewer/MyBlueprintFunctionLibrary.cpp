@@ -6,6 +6,8 @@
 #include "parsers/pdb/PDBParser.h"
 #include "ribbon/Ribbon.h"
 
+#include <vina.h>
+
 using namespace readcif;
 
 void UMyBlueprintFunctionLibrary::OpenFileDialog(
@@ -98,7 +100,7 @@ void UMyBlueprintFunctionLibrary::LoadPDBModel(
 	for (pdb::Atom atom : model.atoms)
 	{
 		AtomStructs.Add(FAtomStruct(FString(atom.element.c_str()),
-		FVector(atom.x, atom.y, atom.z)));
+		                            FVector(atom.x, atom.y, atom.z)));
 	}
 
 	for (const auto& chain : model.chains)
@@ -112,4 +114,35 @@ void UMyBlueprintFunctionLibrary::LoadPDBModel(
 
 		chains.Add(fchain);
 	}
+}
+
+std::string dockingExamplePath(const FString& filename)
+{
+	return TCHAR_TO_UTF8(*FPaths::Combine(
+		FPaths::ProjectDir(), FString("DockingExample"), filename
+	));
+}
+
+void UMyBlueprintFunctionLibrary::PerformTestDocking()
+{
+	Vina v("vina");
+
+	v.set_receptor(dockingExamplePath("1iep_receptor.pdbqt"));
+	v.set_ligand_from_file(dockingExamplePath("1iep_ligand.pdbqt"));
+
+	v.compute_vina_maps(15.190, 53.903, 16.917,
+	                    20, 20, 20);
+
+	// Score the current pose
+	const auto energy = v.score();
+	UE_LOG(LogTemp, Log, TEXT("Score before minimization: %.3f (kcal/mol)"), energy[0]);
+
+	// Minimized locally the current pose
+	const auto energyMinimized = v.optimize();
+	UE_LOG(LogTemp, Log, TEXT("Score after minimization : %.3f (kcal/mol)"), energyMinimized[0]);
+	v.write_pose(dockingExamplePath("1iep_ligand_minimized.pdbqt"));
+
+	// Dock the ligand
+	v.global_search(32, 20);
+	v.write_poses(dockingExamplePath("1iep_ligand_vina_out.pdbqt"), 5);
 }

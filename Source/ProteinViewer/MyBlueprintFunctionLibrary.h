@@ -6,8 +6,6 @@
 #include "Structs/AtomStruct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Structs/FChain.h"
-#include "Structs/FResidue.h"
-#include "Structs/MeshSectionStruct.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 UCLASS()
@@ -42,5 +40,8 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 	static void LoadPDBModel(
 		TArray<FChain>& chains,
 		TArray<FAtomStruct>& AtomStructs,
-        const FString& File);
+		const FString& File);
+
+	UFUNCTION(BlueprintCallable, Category = "Docking")
+	static void PerformTestDocking();
 };

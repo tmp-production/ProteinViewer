@@ -42,6 +42,8 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 		TArray<FAtomStruct>& AtomStructs,
 		const FString& File);
 
+	DECLARE_DYNAMIC_DELEGATE_OneParam(FDockingDelegate, float, Progress);
+
 	UFUNCTION(BlueprintCallable, Category = "Docking")
-	static void PerformTestDocking();
+	static void PerformTestDocking(FDockingDelegate DockingDelegate);
 };

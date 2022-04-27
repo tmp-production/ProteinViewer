@@ -153,7 +153,7 @@ void UMyBlueprintFunctionLibrary::PerformTestDocking(FDockingDelegate DockingDel
 		v.write_pose(dockingExamplePath("1iep_ligand_minimized.pdbqt"));
 
 		// Dock the ligand
-		v.global_search(32, 20);
+		v.global_search(8, 20);
 		v.write_poses(dockingExamplePath("1iep_ligand_vina_out.pdbqt"), 5);
 
 		delete ProgressCallback;

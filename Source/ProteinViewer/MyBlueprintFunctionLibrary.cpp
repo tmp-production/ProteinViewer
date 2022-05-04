@@ -116,14 +116,17 @@ void UMyBlueprintFunctionLibrary::LoadPDBModel(
 	}
 }
 
-std::string dockingExamplePath(const FString& filename)
+FString dockingExamplePath(const FString& filename)
 {
-	return TCHAR_TO_UTF8(*FPaths::Combine(
-		FPaths::ProjectDir(), FString("DockingExample"), filename
-	));
+	return FPaths::Combine(FPaths::ProjectDir(), FString("DockingExample"), filename);
 }
 
-void UMyBlueprintFunctionLibrary::PerformTestDocking(FDockingDelegate DockingDelegate)
+FString UMyBlueprintFunctionLibrary::PerformDocking(
+	const FString& ReceptorFilePath, const FString& LigandFilePath,
+	float CenterX, float CenterY, float CenterZ,
+	float SizeX, float SizeY, float SizeZ,
+	FDockingDelegate DockingDelegate,
+	int Exhaustiveness, int NumPoses)
 {
 	const auto ProgressCallback = new std::function([DockingDelegate](const double Value)
 	{
@@ -133,15 +136,20 @@ void UMyBlueprintFunctionLibrary::PerformTestDocking(FDockingDelegate DockingDel
 		});
 	});
 
-	Async(EAsyncExecution::Thread, [ProgressCallback]
+	const auto OutPath = FPaths::Combine(FPaths::ProjectDir(), FString("DockingResult"));
+	const auto OutFilename = FPaths::CreateTempFilename(*OutPath, u"VINA_OUT_", u".pdbqt");
+
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	PlatformFile.CreateDirectory(*OutPath);
+
+	Async(EAsyncExecution::Thread, [=]
 	{
 		Vina v("vina", 0, 0, 1, false, ProgressCallback);
 
-		v.set_receptor(dockingExamplePath("1iep_receptor.pdbqt"));
-		v.set_ligand_from_file(dockingExamplePath("1iep_ligand.pdbqt"));
+		v.set_receptor(TCHAR_TO_UTF8(*ReceptorFilePath));
+		v.set_ligand_from_file(TCHAR_TO_UTF8(*LigandFilePath));
 
-		v.compute_vina_maps(15.190, 53.903, 16.917,
-		                    20, 20, 20);
+		v.compute_vina_maps(CenterX, CenterY, CenterZ, SizeX, SizeY, SizeZ);
 
 		// Score the current pose
 		const auto energy = v.score();
@@ -150,12 +158,22 @@ void UMyBlueprintFunctionLibrary::PerformTestDocking(FDockingDelegate DockingDel
 		// Minimized locally the current pose
 		const auto energyMinimized = v.optimize();
 		UE_LOG(LogTemp, Log, TEXT("Score after minimization : %.3f (kcal/mol)"), energyMinimized[0]);
-		v.write_pose(dockingExamplePath("1iep_ligand_minimized.pdbqt"));
 
 		// Dock the ligand
-		v.global_search(8, 20);
-		v.write_poses(dockingExamplePath("1iep_ligand_vina_out.pdbqt"), 5);
+		v.global_search(Exhaustiveness, NumPoses);
+		v.write_poses(TCHAR_TO_UTF8(*OutFilename), 5);
 
 		delete ProgressCallback;
 	});
+
+	return OutFilename;
+}
+
+void UMyBlueprintFunctionLibrary::PerformTestDocking(FDockingDelegate DockingDelegate)
+{
+	PerformDocking(
+		dockingExamplePath("1iep_receptor.pdbqt"),
+		dockingExamplePath("1iep_ligand.pdbqt"),
+		15.190, 53.903, 16.917, 20, 20, 20,
+		DockingDelegate);
 }

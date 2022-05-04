@@ -45,5 +45,12 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 	DECLARE_DYNAMIC_DELEGATE_OneParam(FDockingDelegate, float, Progress);
 
 	UFUNCTION(BlueprintCallable, Category = "Docking")
+	static FString PerformDocking(const FString& ReceptorFilePath, const FString& LigandFilePath,
+	                              float CenterX, float CenterY, float CenterZ,
+	                              float SizeX, float SizeY, float SizeZ,
+	                              FDockingDelegate DockingDelegate,
+	                              int Exhaustiveness = 8, int NumPoses = 20);
+
+	UFUNCTION(BlueprintCallable, Category = "Docking")
 	static void PerformTestDocking(FDockingDelegate DockingDelegate);
 };

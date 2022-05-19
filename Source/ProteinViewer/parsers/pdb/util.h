@@ -4,7 +4,6 @@
 
 #ifndef RIBBON_UTIL_H
 #define RIBBON_UTIL_H
-#define ERROR_CONST 66666666;
 
 inline std::string parseString(
         const std::string &str,
@@ -26,15 +25,8 @@ inline int parseInt(
         const std::string::size_type startPos,
         const std::string::size_type endPos
 ) {
-	try
-	{
-		return std::stoi(parseString(str, startPos, endPos));
-	}
-	catch (const std::exception)
-	{
-		return ERROR_CONST;
-	}
-    
+	const auto substr = parseString(str, startPos, endPos); 
+	return std::strtol(substr.c_str(), nullptr, 10);
 }
 
 inline double parseFloat(

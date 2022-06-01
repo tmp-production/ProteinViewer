@@ -12,3 +12,8 @@
 
 * [x] Implement another (more complex) type of protein sturcture visualization.
 
+## Version 1.1 (Due date: 02.06.2022)
+
+* [X] New environment
+* [X] Docking of models (proteins with ligands)
+* [X] Managing multiple models

@@ -3,11 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AtomStruct.h"
+#include "Structs/AtomStruct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Structs/FChain.h"
-#include "Structs/FResidue.h"
-#include "Structs/MeshSectionStruct.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 UCLASS()
@@ -42,5 +40,17 @@ class PROTEINVIEWER_API UMyBlueprintFunctionLibrary final : public UBlueprintFun
 	static void LoadPDBModel(
 		TArray<FChain>& chains,
 		TArray<FAtomStruct>& AtomStructs,
-        const FString& File);
+		const FString& File);
+
+	DECLARE_DYNAMIC_DELEGATE_OneParam(FDockingDelegate, float, Progress);
+
+	UFUNCTION(BlueprintCallable, Category = "Docking")
+	static FString PerformDocking(const FString& ReceptorFilePath, const FString& LigandFilePath,
+	                              float CenterX, float CenterY, float CenterZ,
+	                              float SizeX, float SizeY, float SizeZ,
+	                              FDockingDelegate DockingDelegate,
+	                              int Exhaustiveness = 8, int NumPoses = 20);
+
+	UFUNCTION(BlueprintCallable, Category = "Docking")
+	static void PerformTestDocking(FDockingDelegate DockingDelegate);
 };

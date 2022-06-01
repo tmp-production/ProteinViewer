@@ -8,7 +8,7 @@
 
 ## Project Description
 
-Proteins are large molecules that can be represented as 3D structures. The goal of the project is to create a protein rendering tool on top of a modern game engine. The project will be implemented as a desktop application that supports keyboard and mouse input. In addition, we plan to support real-time integration with third-party bioinformatics software.
+Proteins are large molecules that can be represented as 3D structures. The goal of the project is to create a protein rendering tool on top of a modern game engine. The project will be implemented as a desktop application that supports keyboard and mouse input. In addition, we plan to support real-time integration with third-party bioinformatics software: now we already have integrated AutoDock Vina which allowed to perform docking of molecules right in our program.
 
 ## Risk Analysis
 
@@ -28,6 +28,10 @@ Proteins are large molecules that can be represented as 3D structures. The goal 
 ## The First Release
 
 At the end of semester we are going to present a desktop application, supporting importing and visualizing `Protein Data Bank` files, with convenient navigation in the 3D space and support of multiple rendering presets.
+
+## The Second Release
+
+At the end of second semester we are going to present new big features: new main level environment, manipulating multiple models, docking of molecules (proteins with ligands) - this feature required porting Boost and Autodock Vina to our project.
 
 ## Trello
 

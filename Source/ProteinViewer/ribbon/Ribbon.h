@@ -2,7 +2,7 @@
 
 #include "PeptidePlane.h"
 #include "Triangle.h"
-#include "ProteinViewer/pdb/model/Chain.h"
+#include "ProteinViewer/parsers/pdb/model/Chain.h"
 #include "ProteinViewer/Structs/FResidue.h"
 
 namespace ribbon

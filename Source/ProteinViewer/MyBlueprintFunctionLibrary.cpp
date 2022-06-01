@@ -2,9 +2,11 @@
 
 #include "MyBlueprintFunctionLibrary.h"
 #include "DesktopPlatform/Public/DesktopPlatformModule.h"
-#include "readcif.h"
-#include "pdb/PDBParser.h"
+#include "parsers/mmCIF/readcif.h"
+#include "parsers/pdb/PDBParser.h"
 #include "ribbon/Ribbon.h"
+
+#include <vina.h>
 
 using namespace readcif;
 
@@ -98,7 +100,7 @@ void UMyBlueprintFunctionLibrary::LoadPDBModel(
 	for (pdb::Atom atom : model.atoms)
 	{
 		AtomStructs.Add(FAtomStruct(FString(atom.element.c_str()),
-		FVector(atom.x, atom.y, atom.z)));
+		                            FVector(atom.x, atom.y, atom.z)));
 	}
 
 	for (const auto& chain : model.chains)
@@ -112,4 +114,63 @@ void UMyBlueprintFunctionLibrary::LoadPDBModel(
 
 		chains.Add(fchain);
 	}
+}
+
+FString dockingExamplePath(const FString& filename)
+{
+	return FPaths::Combine(FPaths::ProjectDir(), FString("DockingExample"), filename);
+}
+
+FString UMyBlueprintFunctionLibrary::PerformDocking(
+	const FString& ReceptorFilePath, const FString& LigandFilePath,
+	float CenterX, float CenterY, float CenterZ,
+	float SizeX, float SizeY, float SizeZ,
+	FDockingDelegate DockingDelegate,
+	int Exhaustiveness, int NumPoses)
+{
+	const auto ProgressCallback = new std::function([DockingDelegate](const double Value)
+	{
+		AsyncTask(ENamedThreads::GameThread, [DockingDelegate, Value]()
+		{
+			(void)DockingDelegate.ExecuteIfBound(Value);
+		});
+	});
+
+	const auto OutPath = FPaths::Combine(FDesktopPlatformModule::Get()->GetUserTempPath(), FString("DockingResult"));
+	const auto OutFilename = FPaths::CreateTempFilename(*OutPath, TEXT("VINA_OUT_"), TEXT(".pdbqt"));
+
+	Async(EAsyncExecution::Thread, [=]
+	{
+		Vina v("vina", 0, 0, 1, false, ProgressCallback);
+
+		v.set_receptor(TCHAR_TO_UTF8(*ReceptorFilePath));
+		v.set_ligand_from_file(TCHAR_TO_UTF8(*LigandFilePath));
+
+		v.compute_vina_maps(CenterX, CenterY, CenterZ, SizeX, SizeY, SizeZ);
+
+		// Score the current pose
+		const auto energy = v.score();
+		UE_LOG(LogTemp, Log, TEXT("Score before minimization: %.3f (kcal/mol)"), energy[0]);
+
+		// Minimized locally the current pose
+		const auto energyMinimized = v.optimize();
+		UE_LOG(LogTemp, Log, TEXT("Score after minimization : %.3f (kcal/mol)"), energyMinimized[0]);
+
+		// Dock the ligand
+		v.global_search(Exhaustiveness, NumPoses);
+		v.write_poses(TCHAR_TO_UTF8(*OutFilename), 5);
+
+		delete ProgressCallback;
+	});
+
+	return OutFilename;
+}
+
+void UMyBlueprintFunctionLibrary::PerformTestDocking(FDockingDelegate DockingDelegate)
+{
+	PerformDocking(
+		dockingExamplePath("1iep_receptor.pdbqt"),
+		dockingExamplePath("1iep_ligand.pdbqt"),
+		15.190, 53.903, 16.917, 20, 20, 20,
+		DockingDelegate);
 }

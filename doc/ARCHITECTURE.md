@@ -5,9 +5,11 @@
 1. Main Module
 2. Parser of PDB files
 
-2. Parser of mmCIF files
+3. Parser of mmCIF files
 
-3. 3D polygonal ribbon diagram generator
+4. 3D polygonal ribbon diagram generator
+5. Boost set of C++ libraries (second semester)
+6. AutoDock Vina tool (second semester)
 
 ![Module Diagram](./module-diagram.png)
 
@@ -17,18 +19,33 @@ The main application that uses parser modules to read files, generate 3D modules
 
 ## Parser of PDB
 
-Parses PDB files into internal atom structure.
+`Source/ProteinViewer/parsers/pdb`<br>
+Parses PDB files into internal atom structure. 
 
 Reference Go implementation:
 https://github.com/fogleman/ribbon/tree/master/pdb
 
 ## Parser of mmCIF files
 
-Parses mmCIF files into internal atom structure.
-
+`Source/ProteinViewer/parsers/mmCIF`<br>
+Parses mmCIF files into internal atom structure. <br>
 https://github.com/RBVI/readcif
 
 ## 3D polygonal ribbon diagram generator
 
+`Source/ProteinViewer/ribbon`<br>
 Reference Go implementation:
 https://github.com/fogleman/ribbon/tree/master/ribbon
+
+## Boost
+
+`Source/Boost`<br>
+Some C++ libraries necessary for work of AutoDock<br>
+https://www.boost.org/
+
+
+## AutoDock Vina
+
+`Source/Vina`<br>
+Open-source docking engine<br>
+https://github.com/ccsb-scripps/AutoDock-Vina

@@ -444,7 +444,7 @@ TArray<FResidue> ribbon::createResidueMeshes(const pdb::Chain& chain)
 	TArray<FResidue> sections;
 	TArray<PeptidePlane> planes;
 
-	for (int i = 0; i < chain.residues.size() - 2; i++)
+	for (int i = 0; i + 2 < chain.residues.size(); i++)
 	{
 		const auto& r1 = chain.residues[i];
 		const auto& r2 = chain.residues[i + 1];

@@ -136,11 +136,8 @@ FString UMyBlueprintFunctionLibrary::PerformDocking(
 		});
 	});
 
-	const auto OutPath = FPaths::Combine(FPaths::ProjectDir(), FString("DockingResult"));
+	const auto OutPath = FPaths::Combine(FDesktopPlatformModule::Get()->GetUserTempPath(), FString("DockingResult"));
 	const auto OutFilename = FPaths::CreateTempFilename(*OutPath, TEXT("VINA_OUT_"), TEXT(".pdbqt"));
-
-	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
-	PlatformFile.CreateDirectory(*OutPath);
 
 	Async(EAsyncExecution::Thread, [=]
 	{

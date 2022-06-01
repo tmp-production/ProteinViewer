@@ -781,7 +781,7 @@ std::vector<double> Vina::score() {
 		exit(EXIT_FAILURE);
 	} else if (!m_grid.is_in_grid(m_model)) {
 		std::cerr << "ERROR: The ligand is outside the grid box. Increase the size of the grid box or center it accordingly around the ligand.\n";
-		exit(EXIT_FAILURE);
+		// exit(EXIT_FAILURE);
 	}
 
 	double intramolecular_energy = 0;
@@ -852,7 +852,7 @@ std::vector<double> Vina::optimize(int max_steps) {
 		exit(EXIT_FAILURE);
 	} else if (!m_grid.is_in_grid(m_model)) {
 		std::cerr << "ERROR: The ligand is outside the grid box. Increase the size of the grid box or center it accordingly around the ligand.\n";
-		exit(EXIT_FAILURE);
+		// exit(EXIT_FAILURE);
 	}
 
 	double e = 0;
